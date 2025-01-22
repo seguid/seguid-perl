@@ -1,0 +1,111 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+use SEGUID::Cli;
+use File::Basename qw(basename);
+use Pod::Usage qw(pod2usage);
+
+my $PROGNAME = basename($0);
+
+# Display help if no arguments
+if (!@ARGV) {
+    pod2usage(-verbose => 1);
+}
+
+exit SEGUID::Cli::run(@ARGV);
+
+__END__
+
+=head1 NAME
+
+seguid - Calculate SEGUID checksums for biological sequences
+
+=head1 SYNOPSIS
+
+Calculate SEGUID checksums for various types of sequences:
+
+    # Basic usage
+    echo 'ACGT' | seguid --type=lsseguid
+    
+    # Double-stranded sequence
+    echo 'ACGT;TGCA' | seguid --type=ldseguid
+    
+    # RNA sequence
+    echo 'ACGU' | seguid --type=lsseguid --alphabet='{RNA}'
+    
+    # Get short form checksum
+    echo 'ACGT' | seguid --type=lsseguid --form=short
+
+=head1 OPTIONS
+
+    --help          Display this help message
+    --version       Display version information
+    --type=TYPE     Type of checksum to calculate:
+                    seguid (default), lsseguid, csseguid,
+                    ldseguid, cdseguid
+    --alphabet=STR  Set of symbols for input sequence:
+                    {DNA} (default), {RNA}, {protein}, etc.
+    --form=FORM     Form of checksum to display:
+                    long (default), short, both
+
+=head1 PREDEFINED ALPHABETS
+
+    {DNA}              Complementary DNA symbols (= 'AT,CG')
+    {DNA-extended}     Extended DNA (= '{DNA},BV,DH,KM,SS,RY,WW,NN')
+    {RNA}              Complementary RNA symbols (= 'AU,CG')
+    {RNA-extended}     Extended RNA (= '{RNA},BV,DH,KM,SS,RY,WW,NN')
+    {protein}          Amino-acid symbols (A,C,D,E,F,G,H,I,K,L,M,N,P,Q,R,S,T,V,W,Y)
+    {protein-extended} Extended amino-acid symbols (includes O,U,B,J,Z,X)
+
+=head1 EXAMPLES
+
+Calculate checksum for DNA sequence:
+
+    echo 'ACGT' | seguid --type=lsseguid
+
+Calculate checksum for double-stranded sequence with staggered ends:
+
+    echo '-CGT;ACGT' | seguid --type=ldseguid
+
+Calculate checksum for protein sequence:
+
+    echo 'MKWVTFISLLLLFSSAYS' | seguid --type=lsseguid --alphabet='{protein}'
+
+=head1 DESCRIPTION
+
+This script calculates SEGUID (Sequence Globally Unique IDentifier) checksums
+for various types of biological sequences. It supports:
+
+=over 4
+
+=item * Linear single-stranded sequences (lsseguid)
+
+=item * Circular single-stranded sequences (csseguid)
+
+=item * Linear double-stranded sequences (ldseguid)
+
+=item * Circular double-stranded sequences (cdseguid)
+
+=item * Original SEGUID algorithm (seguid)
+
+=back
+
+=head1 SEE ALSO
+
+For detailed information about SEGUID algorithms and checksums, visit:
+https://github.com/yourname/SEGUID
+
+=head1 AUTHOR
+
+Gyorgy Babnigg E<lt>gbabnigg@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2024 by Gyorgy Babnigg
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

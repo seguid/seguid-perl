@@ -1,0 +1,9 @@
+Revision history for SEGUID
+
+
+0.01  2024-01-19
+    - Initial version
+    - Implemented SEGUID checksum calculation
+    - Added support for DNA, RNA, and protein sequences
+    - Added command-line interface
+    - Included pure Perl DivSufSort implementation
