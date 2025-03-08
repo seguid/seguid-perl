@@ -7,7 +7,7 @@ use SEGUID::Alphabet qw(tablefactory);
 use base 'Exporter';
 
 our @EXPORT_OK = qw(assert_in_alphabet assert_alphabet assert_complementary);
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 NAME
 

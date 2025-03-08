@@ -4,13 +4,13 @@ use warnings;
 use Carp qw(croak);
 use Digest::SHA qw(sha1);
 use MIME::Base64 qw(encode_base64url encode_base64);
-use SEGUID::Manip qw(reverse rotate rotate_to_min min_rotation_perl min_rotation);
+use SEGUID::Manip qw(reverse rotate rotate_to_min min_rotation_perl min_rotation reverse_complement_dna);
 use SEGUID::Alphabet qw(tablefactory);
 use SEGUID::Asserts qw(assert_in_alphabet assert_complementary);
 use base 'Exporter';
 
-our @EXPORT_OK = qw(seguid lsseguid csseguid ldseguid cdseguid seguidv1 seguidv1urlsafe);
-our $VERSION = '1.01';
+our @EXPORT_OK = qw(seguid lsseguid csseguid ldseguid cdseguid seguidv1 seguidv1urlsafe ccseguid);
+our $VERSION = '1.02';
 
 # Define prefixes
 our $SEGUID_PREFIX   = 'seguid=';
@@ -21,7 +21,7 @@ our $CDSEGUID_PREFIX = 'cdseguid=';
 
 our $SEGUIDV1_PREFIX   = 'seguidv1=';
 our $SEGUIDV1URLSAFE_PREFIX   = 'seguidv1urlsafe=';
-
+our $CCSEGUID_PREFIX= 'ccseguid=';
 
 our $B64ALPHABET = { map { $_ => 1 } split //, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/_-' };
 our $SHORT = 6;
@@ -263,6 +263,53 @@ sub cdseguid {
         $form
     );
 }
+
+
+sub ccseguid {
+    my ($watson, $form) = @_;
+    $form ||= 'long';
+    
+    croak "Watson sequence must not be empty" unless defined $watson && length($watson) > 0;
+    
+    my $alphabet = "{DNA}";
+    $watson = uc($watson);
+    $watson =~ s/[^AGCT]//g;
+    
+    my $crick = reverse_complement_dna($watson);
+    assert_complementary($watson, $crick, $alphabet);
+    
+    my $concat_connector = "TTTT";
+    my $concatenated = $watson . $concat_connector . $crick;
+    my $min_rotation_concat = min_rotation($concatenated);
+    
+    # is the $min_rotation_concat in Watson or Crick?
+    my ($w, $c, $ind, $swap);
+    if($min_rotation_concat < length($watson)){
+        # Watson
+        $ind = $min_rotation_concat;
+        $w = rotate($watson, $ind);
+        $c = rotate($crick,  length($crick) - $ind);
+
+    }else{
+        # Crick
+        $ind = $min_rotation_concat - length($watson) - length($concat_connector) ;
+        $w = rotate($watson,  length($watson) - $ind);
+        $c = rotate($crick, $ind);
+        # should swap the two sequences
+        $swap = $w;
+        $w = $c;
+        $c = $swap;
+    }
+   
+    
+    my $result = ldseguid($w, $c, $alphabet, 'long');
+    return _form(
+        $CCSEGUID_PREFIX,
+        substr($result, length($LDSEGUID_PREFIX)),
+        $form
+    );
+}
+
 
 1;
 

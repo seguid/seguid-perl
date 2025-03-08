@@ -8,7 +8,7 @@ use base 'Exporter';
 use SEGUID::Alphabet qw(tablefactory);
 use SEGUID::Chksum qw(seguid lsseguid csseguid ldseguid cdseguid seguidv1 seguidv1urlsafe);
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 our @EXPORT_OK = qw(
     seguid lsseguid csseguid ldseguid cdseguid 
     validate_sequence slurp

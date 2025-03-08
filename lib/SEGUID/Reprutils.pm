@@ -6,7 +6,7 @@ use SEGUID::Manip qw(reverse);
 use base 'Exporter';
 
 our @EXPORT_OK = qw(is_staggered escape_sequence_spec parse_sequence_string);
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 NAME
 

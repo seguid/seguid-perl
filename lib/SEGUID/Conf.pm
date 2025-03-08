@@ -6,7 +6,7 @@ use SEGUID::Manip qw(min_rotation_perl);
 use base 'Exporter';
 
 our @EXPORT_OK = qw(min_rotation set_min_rotation);
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 NAME
 

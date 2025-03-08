@@ -5,7 +5,7 @@ use warnings;
 use Carp qw(croak);
 use SEGUID::DivSufSort::PP qw(min_rotation_divsufsort);
 use base 'Exporter';
-our @EXPORT_OK = qw(rotate reverse min_rotation_perl min_rotation rotate_to_min);
+our @EXPORT_OK = qw(rotate reverse min_rotation_perl min_rotation rotate_to_min reverse_complement_dna);
 
 
 sub rotate {
@@ -31,6 +31,38 @@ sub reverse {
     my ($seq) = @_;
     croak "Argument 'seq' must be a string" unless defined $seq;
     return scalar reverse $seq;
+}
+
+
+sub reverse_complement_dna {
+    my ($seq) = @_;
+    
+    # Check if sequence is defined
+    croak "Argument 'seq' must be a string" unless defined $seq;
+    
+    # Convert to uppercase and remove invalid characters
+    $seq = uc($seq);
+    $seq =~ s/[^AGCT]//g;
+    
+    # Check if sequence is empty after filtering
+    croak "A protein sequence must not be empty" unless $seq;
+    
+    # Create reverse complement
+    my $reverse_complement = '';
+    for (my $i = length($seq) - 1; $i >= 0; $i--) {
+        my $base = substr($seq, $i, 1);
+        if ($base eq 'A') {
+            $reverse_complement .= 'T';
+        } elsif ($base eq 'T') {
+            $reverse_complement .= 'A';
+        } elsif ($base eq 'G') {
+            $reverse_complement .= 'C';
+        } elsif ($base eq 'C') {
+            $reverse_complement .= 'G';
+        }
+    }
+    
+    return $reverse_complement;
 }
 
 sub min_rotation_perl {
@@ -76,7 +108,7 @@ sub rotate_to_min {
     my ($s) = @_;
     
     # Ensure uppercase letters are ordered before lowercase letters
-    die "ASCII ordering assumption violated" unless min_rotation_perl("Aa") == 0;
+    croak "ASCII ordering assumption violated" unless min_rotation_perl("Aa") == 0;
     
     my $amount = min_rotation_perl($s);
     return rotate($s, $amount);

@@ -8,7 +8,7 @@ use SEGUID::Chksum qw(seguid lsseguid csseguid ldseguid cdseguid);
 use SEGUID::Reprutils qw(parse_sequence_string);
 use SEGUID::Manip qw(reverse);
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 =head1 NAME
 
