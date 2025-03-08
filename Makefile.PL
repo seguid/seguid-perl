@@ -19,11 +19,11 @@ WriteMakefile(
         resources => {
             repository => {
                 type => 'git',
-                url  => 'https://github.com/gyorgy5635/SEGUID.git',
-                web  => 'https://github.com/gyorgy5635/SEGUID',
+                url  => 'https://github.com/seguid/seguid-perl.git',
+                web  => 'https://github.com/seguid/seguid-perl',
             },
             bugtracker => {
-                web => 'https://github.com/gyorgy5635/SEGUID/issues',
+                web => 'https://github.com/seguid/seguid-perl/issues',
             },
         },
     },
