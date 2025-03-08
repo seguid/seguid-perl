@@ -14,6 +14,7 @@ BEGIN {
         cdseguid
         seguidv1
         seguidv1urlsafe
+        ccseguid
     ));
 }
 
